@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,13 +24,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,6 +47,7 @@ import uz.safix.shoptestapp.R
 import uz.safix.shoptestapp.data.db.entity.ProductEntity
 import uz.safix.shoptestapp.ui.util.PreviewUtils
 import uz.safix.shoptestapp.ui.viewmodels.ProductsViewModel
+import kotlin.math.roundToInt
 
 /**
  * Created by: androdev
@@ -55,13 +66,35 @@ fun ProductsScreen(
     val products by viewModel.productsStream.collectAsStateWithLifecycle(initialValue = emptyList())
     val query by viewModel.queryStream.collectAsStateWithLifecycle()
 
+    val fabHeight = 72.dp
+    val fabHeightPx = with(LocalDensity.current) { fabHeight.roundToPx().toFloat() }
+    var fabOffsetHeightPx by remember { mutableStateOf(0f) }
+
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+
+                val delta = available.y
+                val newOffset = fabOffsetHeightPx + delta
+                fabOffsetHeightPx = newOffset.coerceIn(-fabHeightPx, 0f)
+
+                return Offset.Zero
+            }
+        }
+    }
+
+
     Scaffold(
-        modifier = Modifier.background(Color.White),
+        modifier = Modifier.background(Color.White).nestedScroll(nestedScrollConnection),
         floatingActionButton = {
             FloatingActionButton(
+                modifier = Modifier
+                    .offset {
+                        IntOffset(x = 0, y = -fabOffsetHeightPx.roundToInt())
+                    },
                 onClick = onAdd,
                 containerColor = colorResource(id = R.color.purple_200),
-                shape = CircleShape
+                shape = CircleShape,
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
