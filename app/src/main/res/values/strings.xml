@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ShopTestApp</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="amount">Количество</string>
+    <string name="naming">Наименование</string>
+    <string name="products_list">Список товаров</string>
+    <string name="product_view">Просмотр товара #%d</string>
+    <string name="update_product">Редактирование товара #%d</string>
+    <string name="insert_product">Добавление товара</string>
+    <string name="add_product">Добавит товар</string>
+    <string name="search_product">Поиск товаров</string>
+    <string name="added_date">Дата добавления</string>
+    <string name="tags">Теги</string>
+    <string name="add_tag">Добавит тег</string>
+    <string name="add">Добавить</string>
+    <string name="change">Изменить</string>
+</resources>
