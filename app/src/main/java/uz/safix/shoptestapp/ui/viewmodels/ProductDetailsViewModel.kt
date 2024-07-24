@@ -2,10 +2,7 @@ package uz.safix.shoptestapp.ui.viewmodels
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import uz.safix.shoptestapp.data.repository.ProductsRepository
 import uz.safix.shoptestapp.ui.screens.AppScreen
 import javax.inject.Inject
